@@ -1,0 +1,124 @@
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <title>pics with stashes</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="shortcut icon" href="/favicon.ico">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="../bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
+
+    </head>
+    <body>
+        <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="full-page">
+            <header>
+                <div class="header-content">
+                    <button class="make-new-post">New</button>
+                </div>
+            </header>
+            <div class="remove-new-post">X</div>
+            <div class="new-post">
+                <div class="uploader-container">Add an image:
+                    <input type="file" class="image-upload-input">
+                </div>
+                <div class="image-preview">
+                    <img src="">
+                </div>  
+                <div class="new-post-input-container"><div>Brew:</div><input type="text" class="beer-name"></div>
+                <div class="new-post-input-container"><div>Brewery:</div><input type="text" class="brewery-name"></div>
+                <div class="rating">
+                    <span class="rate-5">&#9734;</span>
+                    <span class="rate-4">&#9734;</span>
+                    <span class="rate-3">&#9734;</span>
+                    <span class="rate-2">&#9734;</span>
+                    <span class="rate-1">&#9734;</span>
+                </div>
+                <div class="image-upload-comment-container">Comments:
+                    <textarea class="image-upload-comment" maxlength="500"></textarea>
+                </div> 
+                <button class="post-button">Post</button>
+                <button class="preview-image-button">Preview Image</button>
+                <button class="reset-image-button">Hide Preview</button>
+            </div>
+            
+            <div class="detail-container"></div>
+            
+
+            <div class="container">
+                <div class="gallery-container"></div>
+            </div>
+        </div>
+
+        <script type="text/template" class="thumbnail-template">
+                <div class="thumb-beer-name"><%=beerName%></div>
+                <div class="thumb-brewery"><%=breweryName%></div>
+                <div class="beer-thumbnail">
+                    <img src=""></a>
+                </div>
+                <div class="thumb-rating">
+                    <span class="thumb-rate-5">&#9734;</span>
+                    <span class="thumb-rate-4">&#9734;</span>
+                    <span class="thumb-rate-3">&#9734;</span>
+                    <span class="thumb-rate-2">&#9734;</span>
+                    <span class="thumb-rate-1">&#9734;</span>
+                </div>
+        </script>
+
+        <script type="text/template" class="detail-template">
+            <div class="remove-detail-view">X</div>
+            <div class="beer-detail-info">
+                <div class="detail-beer-name"><%=beerName%></div>
+                <div class="detail-brewery"><%=breweryName%></div>
+                <div class="detail-rating">
+                    <span class="detail-rate-5">&#9734;</span>
+                    <span class="detail-rate-4">&#9734;</span>
+                    <span class="detail-rate-3">&#9734;</span>
+                    <span class="detail-rate-2">&#9734;</span>
+                    <span class="detail-rate-1">&#9734;</span>
+                </div>
+                <div class="detail-comment">
+                    <h3>Comments:</h3>
+                    <%=comment%>
+                </div>
+            </div> 
+            <div class="beer-detail-image">
+                    <img src="">
+            </div>
+        </script>
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../bower_components/underscore/underscore.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <script src="//www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+
+        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
