@@ -240,6 +240,10 @@ header {
         margin: 1.5em auto;
         border: 2px solid darken(#6BEE93, 40%);
         display: none;
+        vertical-align: top;
+        & ul {
+            list-style: none;
+        }
     }
 
     & .beer-name, & .brewery-name {
