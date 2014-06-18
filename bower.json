@@ -4,7 +4,8 @@
   "dependencies": {
     "modernizr": "~2.6.2",
     "jquery": "~1.11.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "fabric": "~1.4.7"
   },
   "devDependencies": {}
 }

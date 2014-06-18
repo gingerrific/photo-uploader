@@ -28,11 +28,11 @@ $('.remove-new-post').click(function () {
 	$('.overlay').css({'opacity': 0});
 	$('.full-page').css({'opacity': 1});
 	setTimeout(function (){
-		$('.remove-new-post').hide()
+		$('.remove-new-post').hide();
 		$('.new-post').hide();
 		$('.full-page').removeClass('overlay');
 	},410);
-})
+});
 
 
 
@@ -48,7 +48,8 @@ $('.preview-image-button').click(function () {
 	previewImage(fileUpload);
 	$('.uploader-container').hide();
 	$('.preview-image-button').hide();
-	$('.image-preview').show();
+	$('.image-preview').css({'display': "inline-block"});
+	$('.image-filters').css({'display': "inline-block"});
 	$('.reset-image-button').show();
 });
 
@@ -58,11 +59,34 @@ function previewImage (input){
 	if (input.files && input.files[0]) {
 			var reader = new FileReader();
 			reader.onload = function (e) {
-				$('.image-preview img').attr('src', e.target.result);
+				var divWidth = $('.image-preview').width();
+				$('.image-preview').prepend("<canvas id=\"canvas\" height=\"400\" width=\""+divWidth+"\"></canvas>");
+				var canvas = new fabric.Canvas('canvas');
+				var beerURL = e.target.result
+
+				fabric.Image.fromURL(beerURL, function (pic) {
+					var maxWidth = divWidth*0.9;
+					var maxHeight = 400;
+
+					var imgRatio = Math.min(maxWidth / pic.width, maxHeight / pic.height);
+					pic.height *= imgRatio; 
+					pic.width *= imgRatio; 
+
+					pic.set({
+						left: 10,
+					    top: 10,
+					});
+					pic.scale(0.9);
+					canvas.add(pic).setActiveObject(pic).renderAll();
+					canvas.calcOffset();
+				});
+
 			};
 			reader.readAsDataURL(input.files[0]);
 	}
 }
+
+
 
 // Clicking the reset image will hide the following: the preview image, the reset button, 
 // and the preview button. The uploader will be displayed again
@@ -70,6 +94,7 @@ $('.reset-image-button').click(function () {
 	$('.preview-image-button').hide();
 	$('.reset-image-button').hide();
 	$('.image-preview').hide();
+	$('.image-filters').hide();
 	$('.uploader-container').show();
 });
 
@@ -100,8 +125,7 @@ $('.post-button').click(function () {
 				console.log('success');
 			});
 			app.collection.add(post);
-		})
-		
+		});
 	}
 });
 
@@ -112,23 +136,23 @@ $('.rating span').click(function () {
 		$('.rate-'+i).removeClass('stars');
 	}
 	rated = this.className;
-	if(rated == 'rate-1') {
+	if(rated === 'rate-1') {
 		rated = 1;
 	}
 
-	else if (rated == 'rate-2') {
+	else if (rated === 'rate-2') {
 		rated = 2;
 	}
 
-	else if (rated == 'rate-3') {
+	else if (rated === 'rate-3') {
 		rated = 3;
 	}
 
-	else if (rated == 'rate-4') {
+	else if (rated === 'rate-4') {
 		rated = 4;
 	}
 
-	else if (rated == 'rate-5') {
+	else if (rated === 'rate-5') {
 		rated = 5;
 	}
 
@@ -136,10 +160,10 @@ $('.rating span').click(function () {
 		rated = 0;
 	}
 
-	for (var i = rated; i >= 0; i--) {
-		$('.rate-'+i).addClass('stars');
+	for (var j = rated; j >= 0; j--) {
+		$('.rate-'+j).addClass('stars');
 	}
-})
+});
 
 ///////////////////////////////////////////////////////////////////
 /// New Image/Post ////////////////////////////////////////////////
@@ -172,9 +196,7 @@ var ThumbnailView = Parse.View.extend({
 	initialize: function () {
 		$('.gallery-container').append(this.el);
 		this.render();
-		// Get the beerImage property, set its value as the source of the image
-		var beerPic = this.model.get('beerImage');
-		this.$el.find('img').attr('src', beerPic);
+
 		// Get the rating property, use it's value to add the stars class to the appropriate number of stars
 		var rating = this.model.get('rating');
 		for (var i = 0; i <= rating; i++) {
@@ -208,9 +230,6 @@ var DetailView = Parse.View.extend({
 	initialize: function () {
 		$('.detail-container').append(this.el);
 		this.render();
-
-		var beerPic = this.model.get('beerImage');
-		this.$el.find('img').attr('src', beerPic);
 
 		var rating = this.model.get('rating');
 		for (var i = 0; i <= rating; i++) {
@@ -253,9 +272,6 @@ var AppView = Parse.View.extend({
 });
 
 var app = new AppView();
-
-
-
 
 
 

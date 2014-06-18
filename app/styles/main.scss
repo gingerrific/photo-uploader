@@ -207,12 +207,11 @@ header {
     transition: all .4s linear;
 }
 .new-post {
-    // remove me //
     display: none; 
     opacity: 0;
-    //remove me // 
     position: absolute;
     width: 50%;
+    min-width: 400px;
     left:30%;
     top:20%;
     border: 4px solid #6BEE93;
@@ -228,8 +227,18 @@ header {
     }
 
     & .image-preview {
-        width: 90%;
+        width: 60%;
+        height: 25em;
         margin: 1.5em auto;
+        border: 2px solid #6BEE93;
+        display: none;
+    }
+
+    & .image-filters {
+        width: 38%;
+        height: 25em;
+        margin: 1.5em auto;
+        border: 2px solid darken(#6BEE93, 40%);
         display: none;
     }
 
@@ -317,3 +326,4 @@ header {
         position: absolute;
     }
 }
+

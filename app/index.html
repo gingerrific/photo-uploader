@@ -29,14 +29,14 @@
                     <button class="make-new-post">New</button>
                 </div>
             </header>
+
             <div class="remove-new-post">X</div>
             <div class="new-post">
                 <div class="uploader-container">Add an image:
                     <input type="file" class="image-upload-input">
                 </div>
-                <div class="image-preview">
-                    <img src="">
-                </div>  
+                <div class="image-preview"></div>  
+                <div class="image-filters"></div>
                 <div class="new-post-input-container"><div>Brew:</div><input type="text" class="beer-name"></div>
                 <div class="new-post-input-container"><div>Brewery:</div><input type="text" class="brewery-name"></div>
                 <div class="rating">
@@ -60,13 +60,14 @@
             <div class="container">
                 <div class="gallery-container"></div>
             </div>
+
         </div>
 
         <script type="text/template" class="thumbnail-template">
                 <div class="thumb-beer-name"><%=beerName%></div>
                 <div class="thumb-brewery"><%=breweryName%></div>
                 <div class="beer-thumbnail">
-                    <img src=""></a>
+                    <img src="<%=beerImage%>"></a>
                 </div>
                 <div class="thumb-rating">
                     <span class="thumb-rate-5">&#9734;</span>
@@ -95,7 +96,7 @@
                 </div>
             </div> 
             <div class="beer-detail-image">
-                    <img src="">
+                    <img src="<%=beerImage%>">
             </div>
         </script>
 
@@ -103,6 +104,7 @@
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/underscore/underscore.js"></script>
+        <script src="../bower_components/fabric/dist/fabric.min.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
