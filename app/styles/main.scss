@@ -177,11 +177,17 @@ header {
         margin: 0 auto .75em;
         border-bottom: 2px solid #92DEF3;
         cursor: pointer;
+
+        & img {
+            max-height: 274px;
+            display: block;
+            margin: 0 auto;
+        }
     }
 }
 
-.gallery-container > .thumbnail-container:nth-of-type(4n) {
-    margin-right: 0;
+.gallery-container > .thumbnail-container:nth-of-type(4n+1) {
+    margin-left: 0;
 }
 
 ///////////////////////////////////////////////////////////////////

@@ -53,6 +53,7 @@ $('.preview-image-button').click(function () {
 	$('.reset-image-button').show();
 });
 
+var canvas;
 // Will take an input+type=file data and render it to the targeted location
 function previewImage (input){
 
@@ -61,7 +62,7 @@ function previewImage (input){
 			reader.onload = function (e) {
 				var divWidth = $('.image-preview').width();
 				$('.image-preview').prepend("<canvas id=\"canvas\" height=\"400\" width=\""+divWidth+"\"></canvas>");
-				var canvas = new fabric.Canvas('canvas');
+				canvas = new fabric.Canvas('canvas');
 				var beerURL = e.target.result
 
 				fabric.Image.fromURL(beerURL, function (pic) {
@@ -71,6 +72,34 @@ function previewImage (input){
 					var imgRatio = Math.min(maxWidth / pic.width, maxHeight / pic.height);
 					pic.height *= imgRatio; 
 					pic.width *= imgRatio; 
+
+					
+					$("input[type=radio]").click(function () {
+						var obj = canvas.getActiveObject();
+						if(this.value === 'inverted') {
+							var filter = new fabric.Image.filters.Invert();
+							obj.filters.push(filter);
+							obj.applyFilters(canvas.renderAll.bind(canvas));
+						}
+
+						else if (this.value === 'grayscale') {
+							var filter = new fabric.Image.filters.Grayscale();
+							obj.filters.push(filter);
+							obj.applyFilters(canvas.renderAll.bind(canvas));
+						}
+
+						else if (this.value === 'sepia') {
+							var filter = new fabric.Image.filters.Sepia2();
+							obj.filters.push(filter);
+							obj.applyFilters(canvas.renderAll.bind(canvas));
+						}
+
+						else if (this.value === 'none') {
+							obj.filters = [];
+							obj.applyFilters(canvas.renderAll.bind(canvas));
+						}
+					})
+					
 
 					pic.set({
 						left: 10,
@@ -106,7 +135,7 @@ $('.post-button').click(function () {
 	if (fileUpload.files.length > 0) {
 		var file = fileUpload.files[0];
 		var name = "photo.jpg";
-	 
+	 	console.log(file)
 		var parseFile = new Parse.File(name, file);
 		parseFile.save().done(function () {
 
@@ -119,7 +148,7 @@ $('.post-button').click(function () {
 				"breweryName"	: $('.brewery-name').val(),
 				"comment"		: $('.image-upload-comment').val(),
 				"rating"		: rated,
-				"beerImage"		: parseFile.url()
+				"beerImage"		: canvas ? canvas.item(0).toDataURL("image/png") : parseFile.url() // if a canvas is created, save that image as the beer image, if not, use the uploaded file as is
 			});
 			post.save().done(function () {
 				console.log('success');

@@ -38,13 +38,13 @@
                 <div class="image-preview"></div>  
                 <div class="image-filters">
                     <ul>
-                        <li>Grayscale: <input type="checkbox" class="grayscale-filter">
-
+                        <li>Grayscale: <input type="radio"  name="filter" value="grayscale">
                         </li>
-                        <li>Inverted: <input type="checkbox" class="inverted-filter">
-
+                        <li>Inverted: <input type="radio"  name="filter" value="inverted">
                         </li>
-                        <li>Sepia: <input type="checkbox"class="sepia-filter">
+                        <li>Sepia: <input type="radio" name="filter" value="sepia">
+                        </li>
+                        <li>None: <input type="radio" name="filter" value="none">
 
                         </li>
                     </ul>
@@ -82,7 +82,7 @@
                 <div class="thumb-beer-name"><%=beerName%></div>
                 <div class="thumb-brewery"><%=breweryName%></div>
                 <div class="beer-thumbnail">
-                    <img src="<%=beerImage%>"></a>
+                    <img src="<%=beerImage%>">
                 </div>
                 <div class="thumb-rating">
                     <span class="thumb-rate-5">&#9734;</span>
