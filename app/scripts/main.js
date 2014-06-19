@@ -48,7 +48,6 @@ $('.remove-new-post').click(function () {
 });
 
 
-
 // Any changes made to the uploader will display the preview button
 $(".image-upload-input").change(function () {
 	if ($(".image-upload-input")[0]) {
@@ -60,7 +59,6 @@ $(".image-upload-input").change(function () {
 });
 
 
-
 // Clicking the preview image button will display the local file in the hidden preview div by calling
 // previewImage, show the hidden div and hide the uploader
 $('.preview-image-button').click(function () {
@@ -68,8 +66,7 @@ $('.preview-image-button').click(function () {
 	previewImage(fileUpload);
 	$('.uploader-container').hide();
 	$('.preview-image-button').hide();
-	$('.image-preview').css({'display': "inline-block"});
-	$('.image-filters').css({'display': "inline-block"});
+	$('.image-preview').show();
 	$('.reset-image-button').show();
 });
 
@@ -81,60 +78,27 @@ function previewImage (input) {
 			var reader = new FileReader();
 			reader.onload = function (e) {
 				var divWidth = $('.image-preview').width();
-				$('.image-preview').html("<canvas id=\"canvas\" height=\"400\" width=\""+divWidth+"\"></canvas>");
-				canvas = new fabric.Canvas('canvas');
+				
+				var localImage = new Image();
+				localImage.src = e.target.result;
+				var imageWidth = localImage.width;
+				var imageHeight = localImage.height;
 				var beerURL = e.target.result;
+				
+				var maxWidth = 	divWidth
+				var maxHeight = 400;
 
-				fabric.Image.fromURL(beerURL, function (pic) {
-					var maxWidth = 	divWidth*0.9;
-					var maxHeight = 400;
+				var imgRatio = Math.min(maxWidth / imageWidth, maxHeight / imageHeight);
+				imageHeight *= imgRatio;
+				imageWidth *= imgRatio;
 
-					var imgRatio = Math.min(maxWidth / pic.width, maxHeight / pic.height);
-					pic.height *= imgRatio;
-					pic.width *= imgRatio;
-
-					
-					$("input[type=radio]").click(function () {
-						var obj = canvas.getActiveObject();
-						if(this.value === 'inverted') {
-							var filter = new fabric.Image.filters.Invert();
-							obj.filters.push(filter);
-							obj.applyFilters(canvas.renderAll.bind(canvas));
-						}
-
-						else if (this.value === 'grayscale') {
-							var filter = new fabric.Image.filters.Grayscale();
-							obj.filters.push(filter);
-							obj.applyFilters(canvas.renderAll.bind(canvas));
-						}
-
-						else if (this.value === 'sepia') {
-							var filter = new fabric.Image.filters.Sepia2();
-							obj.filters.push(filter);
-							obj.applyFilters(canvas.renderAll.bind(canvas));
-						}
-
-						else if (this.value === 'none') {
-							obj.filters = [];
-							obj.applyFilters(canvas.renderAll.bind(canvas));
-						}
-					});
-					
-
-					pic.set({
-						left: 10,
-						top: 10,
-					});
-					pic.scale(0.9);
-					canvas.add(pic).setActiveObject(pic).renderAll();
-					canvas.calcOffset();
-				});
+				$('.image-preview img').attr('src',beerURL).css({'height': imageHeight, 'width': imageWidth })
+				
 
 			};
 			reader.readAsDataURL(input.files[0]);
 	}
 }
-
 
 
 // Clicking the reset image will hide the following: the preview image, the reset button, 
@@ -145,7 +109,6 @@ $('.reset-image-button').click(function () {
 	$('.image-preview').hide();
 	$('.image-filters').hide();
 	$('.uploader-container').show();
-	$(".image-upload-input").val('');
 	$('.beer-name').val('');
 	$('.brewery-name').val('');
 	$('.image-upload-comment').val('');
@@ -160,10 +123,8 @@ $('.post-button').click(function () {
 		var file = fileUpload.files[0];
 		var name = "photo.jpg";
 
-		// remove the data:image/png;base64 only leaving the text to upload
-		var base64Sub = canvas ? canvas.item(0).toDataURL("image/png").substring(22) : "";
-		// if a canvas exists, use it's data for the file, otherwise use the file itself
-		var parseFile = new Parse.File(name, canvas ? {base64: base64Sub} : file );
+
+		var parseFile = new Parse.File(name, file);
 		parseFile.save().done(function () {
 
 			var post = new Post();
