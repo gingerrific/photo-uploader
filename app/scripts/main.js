@@ -22,11 +22,24 @@ $('.make-new-post').click(function () {
 	},150);
 });
 
+// clicking the "X" in the upper right hand corner will remove the new post div and reset the value for all inputs
 $('.remove-new-post').click(function () {
 	$('.new-post').css({'opacity': 0});
 	$('.remove-new-post').css({'opacity': 0});
 	$('.overlay').css({'opacity': 0});
 	$('.full-page').css({'opacity': 1});
+	$('.image-upload-comment').val('');
+	$('.beer-name').val('');
+	$('.brewery-name').val('');
+	$(".image-upload-input").val('');
+	$('.image-preview').hide();
+	$('.image-filters').hide();
+	$('.reset-image-button').hide();
+	$('.uploader-container').show();
+	// reset the stars to blank
+	$('.rating span').each(function () {
+		$(this).removeClass('stars');
+	});
 	setTimeout(function (){
 		$('.remove-new-post').hide();
 		$('.new-post').hide();
@@ -38,8 +51,15 @@ $('.remove-new-post').click(function () {
 
 // Any changes made to the uploader will display the preview button
 $(".image-upload-input").change(function () {
-	$('.preview-image-button').show();
+	if ($(".image-upload-input")[0]) {
+		$('.preview-image-button').show();
+	}
+	else {
+		$('.preview-image-button').hide();
+	}
 });
+
+
 
 // Clicking the preview image button will display the local file in the hidden preview div by calling
 // previewImage, show the hidden div and hide the uploader
@@ -55,23 +75,23 @@ $('.preview-image-button').click(function () {
 
 var canvas;
 // Will take an input+type=file data and render it to the targeted location
-function previewImage (input){
+function previewImage (input) {
 
 	if (input.files && input.files[0]) {
 			var reader = new FileReader();
 			reader.onload = function (e) {
 				var divWidth = $('.image-preview').width();
-				$('.image-preview').prepend("<canvas id=\"canvas\" height=\"400\" width=\""+divWidth+"\"></canvas>");
+				$('.image-preview').html("<canvas id=\"canvas\" height=\"400\" width=\""+divWidth+"\"></canvas>");
 				canvas = new fabric.Canvas('canvas');
-				var beerURL = e.target.result
+				var beerURL = e.target.result;
 
 				fabric.Image.fromURL(beerURL, function (pic) {
-					var maxWidth = divWidth*0.9;
+					var maxWidth = 	divWidth*0.9;
 					var maxHeight = 400;
 
 					var imgRatio = Math.min(maxWidth / pic.width, maxHeight / pic.height);
-					pic.height *= imgRatio; 
-					pic.width *= imgRatio; 
+					pic.height *= imgRatio;
+					pic.width *= imgRatio;
 
 					
 					$("input[type=radio]").click(function () {
@@ -98,12 +118,12 @@ function previewImage (input){
 							obj.filters = [];
 							obj.applyFilters(canvas.renderAll.bind(canvas));
 						}
-					})
+					});
 					
 
 					pic.set({
 						left: 10,
-					    top: 10,
+						top: 10,
 					});
 					pic.scale(0.9);
 					canvas.add(pic).setActiveObject(pic).renderAll();
@@ -120,11 +140,15 @@ function previewImage (input){
 // Clicking the reset image will hide the following: the preview image, the reset button, 
 // and the preview button. The uploader will be displayed again
 $('.reset-image-button').click(function () {
-	$('.preview-image-button').hide();
+	$('.preview-image-button').show();
 	$('.reset-image-button').hide();
 	$('.image-preview').hide();
 	$('.image-filters').hide();
 	$('.uploader-container').show();
+	$(".image-upload-input").val('');
+	$('.beer-name').val('');
+	$('.brewery-name').val('');
+	$('.image-upload-comment').val('');
 });
 
 
@@ -135,12 +159,12 @@ $('.post-button').click(function () {
 	if (fileUpload.files.length > 0) {
 		var file = fileUpload.files[0];
 		var name = "photo.jpg";
-	 	console.log(file)
-		var parseFile = new Parse.File(name, file);
-		parseFile.save().done(function () {
 
-			console.log('parse is', parseFile);
-			console.log('parse.url is', parseFile.url());
+		// remove the data:image/png;base64 only leaving the text to upload
+		var base64Sub = canvas ? canvas.item(0).toDataURL("image/png").substring(22) : "";
+		// if a canvas exists, use it's data for the file, otherwise use the file itself
+		var parseFile = new Parse.File(name, canvas ? {base64: base64Sub} : file );
+		parseFile.save().done(function () {
 
 			var post = new Post();
 			post.set({
@@ -148,12 +172,21 @@ $('.post-button').click(function () {
 				"breweryName"	: $('.brewery-name').val(),
 				"comment"		: $('.image-upload-comment').val(),
 				"rating"		: rated,
-				"beerImage"		: canvas ? canvas.item(0).toDataURL("image/png") : parseFile.url() // if a canvas is created, save that image as the beer image, if not, use the uploaded file as is
+				"beerImage"		: parseFile.url(),
+				"beerImageFile"	: parseFile
 			});
 			post.save().done(function () {
-				console.log('success');
+				$('.new-post').css({'opacity': 0});
+				$('.remove-new-post').css({'opacity': 0});
+				$('.overlay').css({'opacity': 0});
+				$('.full-page').css({'opacity': 1});
+				setTimeout(function (){
+					$('.remove-new-post').hide();
+					$('.new-post').hide();
+					$('.full-page').removeClass('overlay');
+				},410);
+				app.collection.add(post);
 			});
-			app.collection.add(post);
 		});
 	}
 });
@@ -273,7 +306,7 @@ var DetailView = Parse.View.extend({
 
 			details.remove();
 
-		})
+		});
 	},
 
 	render: function () {
@@ -281,7 +314,7 @@ var DetailView = Parse.View.extend({
 		this.$el.html(renderedTemplate);
 	}
 
-})
+});
 ///////////////////////////////////////////////////////////////////
 /// App View //////////////////////////////////////////////////////
 /////// Parse Events //////////////////////////////////////////////
@@ -289,18 +322,15 @@ var DetailView = Parse.View.extend({
 
 var AppView = Parse.View.extend({
 	initialize: function () {
-	this.collection = new FullPostCollection();
-	this.collection.on('add', this.addPost)
-	this.collection.fetch({add:true});
+		this.collection = new FullPostCollection();
+		this.collection.on('add', this.addPost);
+		this.collection.fetch({add:true});
 	},
 
-	addPost: function (model){
+	addPost: function (model) {
 		new ThumbnailView({model: model});
 	}
 
 });
 
 var app = new AppView();
-
-
-

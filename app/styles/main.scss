@@ -88,7 +88,9 @@ header {
     left: 15%;
     top: 20%;
     padding: 1em;
-    border: 3px solid red;
+    border: 4px solid #91F7B0;
+    box-shadow: inset 0 0 2px 2px darken(#91F7B0, 45%),
+                      0 0 2px 2px darken(#91F7B0, 25%);
     background: #DDD;
     z-index: 2;
 
@@ -118,6 +120,9 @@ header {
         display: inline-block;
         width: 35%;
         min-height: 300px;
+        & img {
+            width: 100%;
+        }
     }
 
     & .remove-detail-view {
